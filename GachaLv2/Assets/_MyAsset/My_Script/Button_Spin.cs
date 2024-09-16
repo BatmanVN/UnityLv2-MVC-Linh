@@ -44,7 +44,7 @@ public class Button_Spin : MonoBehaviour
             }
         }
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (isSpin)
         {

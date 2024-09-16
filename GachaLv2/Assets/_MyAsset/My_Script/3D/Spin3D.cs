@@ -1,65 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class Spin3D : MonoBehaviour
 {
-    private Vector3 spinWheel;
-    [SerializeField] private float angleRoll;
-    [SerializeField] private float angleSpeed;
+    [SerializeField] private float downSpeed;
+    [SerializeField] private float maxDistance;
+    [SerializeField] private float speed;
     [SerializeField] private float time;
-    [SerializeField] private AudioSource spinAudio;
-    [SerializeField] private UnityEvent onEnable;
-    [SerializeField] private UnityEvent onDisable;
-    private bool isSpin;
-    private void Start()
-    {
+    //[SerializeField] private float min;
+    //[SerializeField] private float max;
+    private bool isSpining;
 
-    }
-    private void SpinButton()
+    // Update is called once per frame
+    private void FixedUpdate()
     {
-        SetTime();
-        spinWheel = new Vector3(angleSpeed, -90, 90);
-        transform.eulerAngles = spinWheel;
-        time -= Time.deltaTime;
+        RotateWheel();
     }
-
-    private void SetTime()
+    private void RotateWheel()
     {
-        if (time > time / 2)
+        if (isSpining)
         {
-            angleSpeed += 5;
+            maxDistance = time * speed;
+            transform.Rotate(0, 0, maxDistance, Space.World);
+            speed -= downSpeed * Time.deltaTime;
         }
-        if (time <= time / 1.5)
+        if (speed <= 0)
         {
-            angleSpeed -= 5;
-            if (angleSpeed <= angleRoll)
-            {
-                isSpin = false;
-                onEnable?.Invoke();
-                spinAudio.Pause();
-            }
+            downSpeed = 0;
+            isSpining = false;
         }
     }
-    private void Update()
+    public void SpinWheel()
     {
-        if (isSpin)
+        if (!isSpining)
         {
-            SpinButton();
-        }
-    }
-    public void StartWheel()
-    {
-        onDisable?.Invoke();
-        if (!isSpin)
-        {
-            time = Random.Range(4, 6);
-            angleRoll = Random.Range(360, 720);
-            isSpin = true;
-            spinAudio.Play();
+            time = Random.Range(4f, 6f);
+            speed = 5;
+            downSpeed = 1;
+            isSpining = true;
         }
     }
 }
