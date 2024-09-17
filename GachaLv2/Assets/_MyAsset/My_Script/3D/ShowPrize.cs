@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RewardBar : MonoBehaviour
+public class ShowPrize : MonoBehaviour
 {
     [SerializeField] private Text showGift;
-
-    public Text ShowGift { get => showGift; set => showGift = value; }
-
+    
+    public void DisplayPrize(int prize)
+    {
+        showGift.text = prize.ToString();
+    }
 }

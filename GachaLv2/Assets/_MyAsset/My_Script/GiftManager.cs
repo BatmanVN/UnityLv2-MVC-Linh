@@ -17,13 +17,9 @@ public class GiftManager : MonoBehaviour
             }
         }
     }
-    private void EnableBar()
+    public void EnableBar()
     {
         rewardBar.SetActive(true);
-    }
-    public void EnableRWBar()
-    {
-        Invoke(nameof(EnableBar), 0.5f);
     }
     private void Update()
     {

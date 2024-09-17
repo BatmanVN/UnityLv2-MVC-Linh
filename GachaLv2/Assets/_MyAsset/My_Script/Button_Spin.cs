@@ -5,11 +5,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+//Gacha2D
 public class Button_Spin : MonoBehaviour
 {
-    private Vector3 spinWheel;
-    [SerializeField] private float angleRoll;
+    [SerializeField] private GameObject wheel;
+    [SerializeField] private float prizeRandom;
     [SerializeField] private float angleSpeed;
+    [SerializeField] private float defaultSpeed;
     [SerializeField] private float time;
     [SerializeField] private AudioSource spinAudio;
     [SerializeField] private UnityEvent onEnable;
@@ -21,28 +23,25 @@ public class Button_Spin : MonoBehaviour
     }
     private void SpinButton()
     {
-        SetTime();
-        spinWheel += Time.deltaTime * new Vector3(0, 0, angleSpeed);
-        transform.eulerAngles = spinWheel;
-        time -= Time.deltaTime;
-    }
-
-    private void SetTime()
-    {
-        if (time > time / 2)
+        if (isSpin && time > 0)
         {
-            angleSpeed++;
-        }
-        if (time <= time / 1.5)
-        {
-            angleSpeed -= 2;
-            if (angleSpeed <= angleRoll)
+            angleSpeed += 10;
+            if (time < 2.5f)
             {
-                isSpin = false;
-                onEnable?.Invoke();
-                spinAudio.Pause();
+                if (time <= 0 && angleSpeed < 0) return;
+                angleSpeed -= 20;//co the dat biet de chinh trong unity cho de
             }
+
+            wheel.transform.Rotate(0, 0, angleSpeed*Time.deltaTime);
         }
+        if (time <= 0)
+        {
+            wheel.transform.eulerAngles = new Vector3(0,0, prizeRandom);
+            onEnable?.Invoke();
+            spinAudio.Pause();
+            isSpin = false;
+        }
+        time -= Time.deltaTime;
     }
     private void FixedUpdate()
     {
@@ -57,8 +56,9 @@ public class Button_Spin : MonoBehaviour
         if (!isSpin)
         {
             time = Random.Range(4, 6);
-            angleRoll = Random.Range(360, 720);
             isSpin = true;
+            prizeRandom = Random.Range(0, 360);
+            angleSpeed = defaultSpeed;
             spinAudio.Play();
         }
     }
