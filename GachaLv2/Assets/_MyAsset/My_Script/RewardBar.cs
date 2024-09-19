@@ -7,6 +7,9 @@ public class RewardBar : MonoBehaviour
 {
     [SerializeField] private Text showGift;
 
-    public Text ShowGift { get => showGift; set => showGift = value; }
+    public void DisplayReward(string giftName)
+    {
+        showGift.text = giftName;
+    }
 
 }

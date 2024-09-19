@@ -5,25 +5,28 @@ using UnityEngine.UI;
 
 public class Gift : MonoBehaviour
 {
-    [SerializeField] private Text textGift;
-    private bool isTrigger;
+    [SerializeField] private float min;
+    [SerializeField] private float max;
+    [SerializeField] private bool isPrize;
 
-    public bool IsTrigger { get => isTrigger; set => isTrigger = value; }
-    public Text TextGift { get => textGift; set => textGift = value; }
+    public bool IsPrize { get => isPrize;}
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    public void ShowName(float angle)
     {
-        if (collision.CompareTag("Pointer"))
+        if (angle >= min && angle < max)
         {
-            IsTrigger = true;
-            Debug.Log(textGift.text);
+            isPrize =true;
         }
+        else
+            isPrize = false;
     }
-    public void OnTriggerExit2D(Collider2D collision)
+    public float RandonAngle(float angle)
     {
-        if (collision.CompareTag("Pointer"))
-        {
-            IsTrigger = false;
-        }
+        angle = Random.Range(min, max);
+        Debug.Log("Random" + angle);
+        Debug.Log("Min: " + min);
+        Debug.Log("Max: " + max);
+        Debug.Log(gameObject.name);
+        return angle;
     }
 }

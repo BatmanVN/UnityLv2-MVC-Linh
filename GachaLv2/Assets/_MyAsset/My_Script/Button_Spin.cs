@@ -6,16 +6,18 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 //Gacha2D
-public class Button_Spin : MonoBehaviour
+public class Button_SpinRandom : MonoBehaviour
 {
+    [SerializeField] private GameObject rewardBar;
     [SerializeField] private GameObject wheel;
-    [SerializeField] private float prizeRandom;
-    [SerializeField] private float angleSpeed;
-    [SerializeField] private float defaultSpeed;
+    [SerializeField] private float angle;
+    [SerializeField] private int prizeNumber;
     [SerializeField] private float time;
+    [SerializeField] private float subSpeed;
+    [SerializeField] private float Speed;
     [SerializeField] private AudioSource spinAudio;
-    [SerializeField] private UnityEvent onEnable;
-    [SerializeField] private UnityEvent onDisable;
+    //[SerializeField] private UnityEvent onEnable;
+    //[SerializeField] private UnityEvent onDisable;
     private bool isSpin;
     private void Start()
     {
@@ -23,26 +25,21 @@ public class Button_Spin : MonoBehaviour
     }
     private void SpinButton()
     {
-        if (isSpin && time > 0)
+        if (isSpin)
         {
-            angleSpeed += 10;
-            if (time < 2.5f)
-            {
-                if (time <= 0 && angleSpeed < 0) return;
-                angleSpeed -= 20;//co the dat biet de chinh trong unity cho de
-            }
-
-            wheel.transform.Rotate(0, 0, angleSpeed*Time.deltaTime);
+            subSpeed += Speed;
+            wheel.transform.Rotate(0, 0, time * subSpeed);
+            time -= Time.deltaTime;
         }
         if (time <= 0)
         {
-            wheel.transform.eulerAngles = new Vector3(0,0, prizeRandom);
-            onEnable?.Invoke();
+            //onEnable?.Invoke();
             spinAudio.Pause();
             isSpin = false;
+            rewardBar.SetActive(true);
         }
-        time -= Time.deltaTime;
     }
+
     private void FixedUpdate()
     {
         if (isSpin)
@@ -52,13 +49,12 @@ public class Button_Spin : MonoBehaviour
     }
     public void StartWheel()
     {
-        onDisable?.Invoke();
+        rewardBar.SetActive(false);
         if (!isSpin)
         {
             time = Random.Range(4, 6);
             isSpin = true;
-            prizeRandom = Random.Range(0, 360);
-            angleSpeed = defaultSpeed;
+            subSpeed = 5f;
             spinAudio.Play();
         }
     }
