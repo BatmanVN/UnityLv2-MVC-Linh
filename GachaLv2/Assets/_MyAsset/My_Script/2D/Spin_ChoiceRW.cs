@@ -9,9 +9,10 @@ public class Spin_ChoiceRW : MonoBehaviour
     [SerializeField] private GameObject wheel;
     [SerializeField] private float targetAngle;
     [SerializeField] private float time;
+    [SerializeField] private float downTime;
     [SerializeField] private float firstSpeed;
-    //[SerializeField] private float downSpeed;
-    //[SerializeField] private float speed;
+    [SerializeField] private int spinRound;
+    [SerializeField] private int power;
     [SerializeField] private AudioSource spinAudio;
     private bool isSpin;
     private void Start()
@@ -20,26 +21,22 @@ public class Spin_ChoiceRW : MonoBehaviour
     }
     private void SpinButton()
     {
-        time -= Time.deltaTime;
-        wheel.transform.Rotate(0, 0, firstSpeed*Time.deltaTime);
-        if (time <= 9)
-        {   // khi time <= 3 thì sẽ lưu góc hiện tại lại
-            
-            float currentAngle = wheel.transform.eulerAngles.z;
-            Debug.Log("Current: " + currentAngle);
-            // tính góc còn lại từ currtenAngle đến giftAngle choice
-            //float remainAngle = Mathf.DeltaAngle(currentAngle, gift.Angle);
-            // targetAngle sẽ dùng lerp để tính toán từ góc Z đã lưu khi time <=3 cho đến góc/gift đã đc chọn
-            // và sẽ tính toán từ 0-1 nếu time =3 thì tốc độ vẫn sẽ là firstSpeed, khi time giảm dần tốc độ sẽ giảm dần về 0
-            targetAngle = Mathf.Lerp(currentAngle, gift.Angle, (9 - time) /9);
-            wheel.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
-        }
-        if (time <= 0)
+        downTime += Time.deltaTime;
+        float timeCount = CalEndtime(downTime / time);
+        float changeSpeed = Mathf.Lerp(0f,firstSpeed, timeCount);
+        wheel.transform.eulerAngles = new Vector3(0, 0, changeSpeed);
+        //wheel.transform.Rotate(0, 0, changeSpeed*Time.deltaTime);
+        if ((time - downTime) < 0.001f)
         {
-            spinAudio.Pause();
+            wheel.transform.rotation = Quaternion.Euler(0,0,gift.Angle);
             isSpin = false;
             rewardBar.SetActive(true);
+            spinAudio.Pause();
         }
+    }
+    private float CalEndtime(float x)
+    {
+        return 1 - Mathf.Pow(1-x,power);
     }
     private void FixedUpdate()
     {
@@ -53,9 +50,10 @@ public class Spin_ChoiceRW : MonoBehaviour
         rewardBar.SetActive(false);
         if (!isSpin)
         {
-            time = Random.Range(10, 15);
+            time = Random.Range(4, 6);
             isSpin = true;
-            firstSpeed = (360 * 3 + (2f * gift.Angle)) * -1;
+            downTime = 0;
+            firstSpeed = 360 * spinRound +  gift.Angle;
             spinAudio.Play();
         }
     }

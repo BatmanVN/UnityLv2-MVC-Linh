@@ -20,6 +20,7 @@ public class Spin3D : MonoBehaviour
     [SerializeField] private float firstSpeed;
     [SerializeField] private int roundSpin;
     [SerializeField] private float downTime;
+    [SerializeField] private int power;
     [SerializeField] private AudioSource spinAudio;
     private bool isSpining;
 
@@ -37,9 +38,10 @@ public class Spin3D : MonoBehaviour
     {
         downTime += Time.deltaTime;
         float easing = EaseOutQuint(downTime / time);
-        float speed = Mathf.Lerp(0f, firstSpeed, easing);
+        //float speed = Mathf.Lerp(0f, firstSpeed, easing);
+        float speed = Mathf.SmoothStep(0f, firstSpeed, easing);
         wheel.transform.eulerAngles = new Vector3(0,0, speed);
-        if((time - downTime) < 0.01f)
+        if((time - downTime) < 0.001f)
         {
             wheel.transform.rotation = Quaternion.Euler(0, 0, gift.Angle);
             spinAudio.Pause();
@@ -49,7 +51,7 @@ public class Spin3D : MonoBehaviour
     }
     private float EaseOutQuint(float x)
     {
-        return 1 - Mathf.Pow(1 - x, 5);
+        return 1 - Mathf.Pow(1 - x, power);
     }
     private void SpinWheel()
     {
