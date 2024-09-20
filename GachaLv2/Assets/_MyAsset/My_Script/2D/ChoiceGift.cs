@@ -13,23 +13,18 @@ public class ChoiceGift : MonoBehaviour
 
     private void Start()
     {
+        choiceGift = Random.Range(0, gifts.Count);
         GiftSelected();
     }
     public void GiftSelected()
     {
-        for (int i = 0; i < gifts.Count; i++)
+        if (gifts[choiceGift] != null)
         {
-            if (i == choiceGift)
-            {
-                Angle = gifts[choiceGift].RandonAngle(Angle);
-                showReward.DisplayReward(gifts[choiceGift].name);
-                Debug.Log("Angle: Choice " + Angle);
-                break;
-            }
+            angle = gifts[choiceGift].RandonAngle(angle);
+            showReward.DisplayReward(gifts[choiceGift].name);
         }
     }
     private void Update()
     {
-        
     }
 }

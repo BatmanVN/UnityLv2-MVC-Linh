@@ -14,9 +14,9 @@ public class GiftManager : MonoBehaviour
     private void CaculatorAngle()
     {
         angle = wheel.transform.eulerAngles.z;
-        if (angle > 180)
+        if (angle < 0)
         {
-            angle -= 360;
+            angle += 360;
         }
         Debug.Log("Change Angle: " + angle);
     }

@@ -23,10 +23,6 @@ public class Gift : MonoBehaviour
     public float RandonAngle(float angle)
     {
         angle = Random.Range(min, max);
-        Debug.Log("Random" + angle);
-        Debug.Log("Min: " + min);
-        Debug.Log("Max: " + max);
-        Debug.Log(gameObject.name);
         return angle;
     }
 }

@@ -4,32 +4,30 @@ using UnityEngine;
 
 public class PrizeManager : MonoBehaviour
 {
-    [SerializeField] private List<PrizeWheel> prizes = new List<PrizeWheel>();
+    [SerializeField] private List<Gift> gifts = new List<Gift>();
     [SerializeField] private Transform wheel;
-    [SerializeField] private ShowPrize showP;
+    [SerializeField] private RewardBar showP;
     [SerializeField] private int prize;
     [SerializeField] private float angle;
     //private int index;
     //private bool active;
     private void Start()
     {
-        wheel = GameObject.FindGameObjectWithTag("Wheel").GetComponent<Transform>();
+        
     }
     private void SetPrize()
     {
-        angle = wheel.eulerAngles.x;
+        angle = wheel.eulerAngles.z;
         if (angle > 180)
         {
             angle -= 360;
         }
-        Debug.Log("Angle: " + angle);
-        foreach (PrizeWheel wheel in prizes)
+        foreach (Gift gift in gifts)
         {
-            wheel.SetAngle(angle);
-            if (wheel.Active)
+            gift.ShowName(angle);
+            if (gift.IsPrize)
             {
-                prize = wheel.PrizeNumber;
-                showP.DisplayPrize(prize);
+                showP.DisplayReward(gift.name);
             }
         }
     }

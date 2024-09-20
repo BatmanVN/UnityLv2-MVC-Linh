@@ -13,11 +13,11 @@ public class Button_SpinRandom : MonoBehaviour
     [SerializeField] private float angle;
     [SerializeField] private int prizeNumber;
     [SerializeField] private float time;
+    [SerializeField] private float defaultSpeed;
     [SerializeField] private float subSpeed;
     [SerializeField] private float Speed;
     [SerializeField] private AudioSource spinAudio;
-    //[SerializeField] private UnityEvent onEnable;
-    //[SerializeField] private UnityEvent onDisable;
+
     private bool isSpin;
     private void Start()
     {
@@ -25,15 +25,11 @@ public class Button_SpinRandom : MonoBehaviour
     }
     private void SpinButton()
     {
-        if (isSpin)
-        {
-            subSpeed += Speed;
-            wheel.transform.Rotate(0, 0, time * subSpeed);
-            time -= Time.deltaTime;
-        }
+        subSpeed += Speed;
+        wheel.transform.Rotate(0, 0, time * subSpeed);
+        time -= Time.deltaTime;
         if (time <= 0)
         {
-            //onEnable?.Invoke();
             spinAudio.Pause();
             isSpin = false;
             rewardBar.SetActive(true);
@@ -54,7 +50,7 @@ public class Button_SpinRandom : MonoBehaviour
         {
             time = Random.Range(4, 6);
             isSpin = true;
-            subSpeed = 5f;
+            subSpeed = defaultSpeed;
             spinAudio.Play();
         }
     }
